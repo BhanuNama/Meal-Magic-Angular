@@ -17,6 +17,8 @@ export class DishFormComponent implements OnInit {
   dishId: string | null = null;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  imageBase64: string = '';
+  apiUrl = 'http://localhost:3001/dish';
   errors = {
     dishName: '',
     description: '',
@@ -24,6 +26,8 @@ export class DishFormComponent implements OnInit {
     price: '',
     coverImage: ''
   };
+  errorMsg: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -54,29 +58,31 @@ export class DishFormComponent implements OnInit {
     });
   }
 
-  loadDishData(id: string) {
-    // Sample data - in real app, fetch from API
-    const dishes = {
-      '1': {
-        dishName: 'Biryani',
-        description: 'Aromatic basmati rice cooked with tender chicken, spices, and herbs',
-        cuisine: 'Indian',
-        price: 250,
-        availability: true,
-        image: 'https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg'
-      }
-    };
+  async loadDishData(id: string) {
+    try {
+      this.isLoading = true;
+      const response = await fetch(`${this.apiUrl}/getDishById/${id}`);
+      const data = await response.json();
 
-    const dish = dishes[id as keyof typeof dishes];
-    if (dish) {
-      this.dishForm.patchValue({
-        dishName: dish.dishName,
-        description: dish.description,
-        cuisine: dish.cuisine,
-        price: dish.price,
-        availability: dish.availability
-      });
-      this.imagePreview = dish.image;
+      if (response.ok) {
+        const dish = data;
+        this.dishForm.patchValue({
+          dishName: dish.dishName,
+          description: dish.description,
+          cuisine: dish.cuisine,
+          price: dish.price,
+          availability: dish.isAvailable
+        });
+        this.imagePreview = dish.coverImage;
+        this.imageBase64 = dish.coverImage; // Store existing image
+      } else {
+        this.errorMsg = 'Failed to load dish data';
+      }
+    } catch (error) {
+      console.error('Error loading dish:', error);
+      this.errorMsg = 'Error loading dish data';
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -105,6 +111,7 @@ export class DishFormComponent implements OnInit {
         this.errors['coverImage'] = 'Invalid file type. Please upload JPG, JPEG, or PNG';
         this.selectedFile = null;
         this.imagePreview = null;
+        this.imageBase64 = '';
         return;
       }
 
@@ -114,22 +121,26 @@ export class DishFormComponent implements OnInit {
         this.errors['coverImage'] = 'File size exceeds 5MB';
         this.selectedFile = null;
         this.imagePreview = null;
+        this.imageBase64 = '';
         return;
       }
 
       this.errors['coverImage'] = '';
       this.selectedFile = file;
 
-      // Create image preview
+      // Convert to base64 and create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
+        this.imageBase64 = e.target.result; // Store base64 string
       };
       reader.readAsDataURL(file);
     }
   }
 
-  onSubmit() {
+  async onSubmit() {
+    this.errorMsg = '';
+    
     // Mark all fields as touched to show validation
     this.dishForm.markAllAsTouched();
     Object.keys(this.dishForm.controls).forEach(key => {
@@ -137,7 +148,7 @@ export class DishFormComponent implements OnInit {
     });
 
     // Check if cover image is required for new dish
-    if (!this.isEditMode && !this.selectedFile) {
+    if (!this.isEditMode && !this.imageBase64) {
       this.errors['coverImage'] = 'Cover Image is required';
       return;
     }
@@ -147,21 +158,91 @@ export class DishFormComponent implements OnInit {
       return;
     }
 
-    const formData = {
-      ...this.dishForm.value,
-      coverImage: this.selectedFile
-    };
-
     if (this.isEditMode) {
-      console.log('Updating dish:', formData);
-      alert('Dish Updated Successfully!');
+      await this.updateDish();
     } else {
-      console.log('Adding dish:', formData);
-      alert('Dish Added Successfully!');
+      await this.addDish();
     }
+  }
 
-    // Navigate back to dishes list
-    this.router.navigate(['/admin/dishes']);
+  async addDish() {
+    try {
+      this.isLoading = true;
+      const { dishName, description, cuisine, price, availability } = this.dishForm.value;
+
+      const response = await fetch(`${this.apiUrl}/addDish`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          dishName,
+          description,
+          cuisine,
+          price,
+          isAvailable: availability,
+          coverImage: this.imageBase64
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Dish added successfully:', data);
+        alert('Dish Added Successfully!');
+        this.router.navigate(['/admin/dishes']);
+      } else {
+        this.errorMsg = data.message || 'Failed to add dish';
+      }
+    } catch (error) {
+      console.error('Error adding dish:', error);
+      this.errorMsg = 'Server error. Please try again.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async updateDish() {
+    try {
+      this.isLoading = true;
+      const { dishName, description, cuisine, price, availability } = this.dishForm.value;
+
+      const updateData: any = {
+        dishName,
+        description,
+        cuisine,
+        price,
+        isAvailable: availability
+      };
+
+      // Only include coverImage if a new one was selected
+      if (this.selectedFile && this.imageBase64) {
+        updateData.coverImage = this.imageBase64;
+      }
+
+      const response = await fetch(`${this.apiUrl}/updateDish/${this.dishId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Dish updated successfully:', data);
+        alert('Dish Updated Successfully!');
+        this.router.navigate(['/admin/dishes']);
+      } else {
+        this.errorMsg = data.message || 'Failed to update dish';
+      }
+    } catch (error) {
+      console.error('Error updating dish:', error);
+      this.errorMsg = 'Server error. Please try again.';
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   onCancel() {

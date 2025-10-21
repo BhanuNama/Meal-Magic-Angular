@@ -15,12 +15,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errors: { email: string; password: string } = { email: '', password: '' };
   errorMsg: string = '';
-
-  // Demo users
-  private demoUsers = {
-    'admin@gmail.com': { password: 'admin123', role: 'Admin', username: 'DemoAdmin' },
-    'user@gmail.com': { password: 'user1234', role: 'User', username: 'DemoUser' }
-  };
+  apiUrl = 'http://localhost:3001/user';
 
   constructor(
     private fb: FormBuilder,
@@ -62,7 +57,7 @@ export class LoginComponent implements OnInit {
   }
 
   // handleSubmit Method
-  handleSubmit(): void {
+  async handleSubmit(): Promise<void> {
     this.errorMsg = ''; // Clear previous server error
 
     // Checks Validation Errors: Validates all form fields
@@ -77,27 +72,40 @@ export class LoginComponent implements OnInit {
 
     const { email, password } = this.loginForm.value;
     
-    // Check demo users
-    const user = this.demoUsers[email as keyof typeof this.demoUsers];
-    
-    if (user && user.password === password) {
-      console.log('Login successful:', { email, role: user.role, username: user.username });
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify({
-        email,
-        role: user.role,
-        username: user.username
-      }));
-      
-      // Navigate based on role
-      if (user.role === 'Admin') {
-        this.router.navigate(['/admin/dashboard']);
+    try {
+      const response = await fetch(`${this.apiUrl}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful:', data);
+        
+        // Store user data and token in localStorage
+        localStorage.setItem('user', JSON.stringify({
+          email: data.data.user.email,
+          role: data.data.user.userRole,
+          username: data.data.user.username,
+          token: data.data.token
+        }));
+        
+        // Navigate based on role
+        if (data.data.user.userRole === 'Admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/user']);
+        }
       } else {
-        this.router.navigate(['/user']);
+        this.errorMsg = data.message || 'Invalid credentials. Please try again.';
       }
-    } else {
-      this.errorMsg = 'Invalid credentials. Please try again.';
+    } catch (error) {
+      console.error('Login error:', error);
+      this.errorMsg = 'Server error. Please try again later.';
     }
   }
 

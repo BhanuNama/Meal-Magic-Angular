@@ -34,6 +34,7 @@ export class UserViewDishesComponent implements OnInit {
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 6;
+  apiUrl = 'http://localhost:3001';
   
   // Reviews modal
   showReviewsModal: boolean = false;
@@ -46,48 +47,27 @@ export class UserViewDishesComponent implements OnInit {
     this.loadDishes();
   }
 
-  loadDishes() {
-    // Sample data - in real app, this would come from API
-    this.dishes = [
-      {
-        id: 1,
-        name: 'Biryani',
-        cuisine: 'Indian',
-        description: 'Aromatic basmati rice cooked with tender chicken, spices, and herbs',
-        price: 250,
-        availability: 'Available',
-        image: 'https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg'
-      },
-      {
-        id: 2,
-        name: 'Burger',
-        cuisine: 'American',
-        description: 'Juicy grilled beef patty with cheese, lettuce, tomato, and sauce in a soft bun',
-        price: 180,
-        availability: 'Available',
-        image: 'https://www.southernliving.com/thmb/x4IHh8b0-bdyHHLzNoHY-SP6E8M=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Extra_Easy_Cheeseburger_006-b68cf-35c15b759d9a4e5a80f8a67c41a7a01f.jpg'
-      },
-      {
-        id: 3,
-        name: 'Salad',
-        cuisine: 'Mediterranean',
-        description: 'Fresh mixed greens with cucumber, tomato, olives, and feta cheese',
-        price: 150,
-        availability: 'Available',
-        image: 'https://natashaskitchen.com/wp-content/uploads/2019/01/Caesar-Salad-Recipe-3.jpg'
-      },
-      {
-        id: 4,
-        name: 'Sushi',
-        cuisine: 'Japanese',
-        description: 'Delicate rolls of vinegared rice with fresh fish and vegetables',
-        price: 400,
-        availability: 'Available',
-        image: 'https://www.justonecookbook.com/wp-content/uploads/2020/01/Salmon-Sushi-Roll-0286-I.jpg'
+  async loadDishes() {
+    try {
+      const response = await fetch(`${this.apiUrl}/dish/getAllDishes`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Map backend data to component format
+        this.dishes = data.map((dish: any) => ({
+          id: dish._id,
+          name: dish.dishName,
+          cuisine: dish.cuisine,
+          description: dish.description,
+          price: dish.price,
+          availability: dish.isAvailable ? 'Available' : 'Not Available',
+          image: dish.coverImage
+        }));
+        this.filteredDishes = [...this.dishes];
       }
-    ];
-    
-    this.filteredDishes = [...this.dishes];
+    } catch (error) {
+      console.error('Error loading dishes:', error);
+    }
   }
 
   onSearch() {
@@ -127,31 +107,28 @@ export class UserViewDishesComponent implements OnInit {
     this.showReviewsModal = true;
   }
 
-  loadReviews(dishId: number) {
-    // Sample reviews - in real app, fetch from API
-    this.dishReviews = [
-      {
-        id: 1,
-        username: 'DemoUser',
-        rating: 5,
-        comment: 'good',
-        date: new Date('2025-10-08')
-      },
-      {
-        id: 2,
-        username: 'DemoUser',
-        rating: 5,
-        comment: 'Worth!',
-        date: new Date('2025-10-09')
-      },
-      {
-        id: 3,
-        username: 'DemoUser',
-        rating: 4,
-        comment: 'Tasty!',
-        date: new Date('2025-10-10')
+  async loadReviews(dishId: any) {
+    try {
+      const response = await fetch(`${this.apiUrl}/review/getReviewsByDishId/${dishId}`);
+      const data = await response.json();
+      
+      if (response.ok && data.data) {
+        // Map backend reviews to component format
+        this.dishReviews = data.data.map((review: any) => ({
+          id: review._id,
+          username: review.userId?.username || 'Anonymous',
+          rating: review.rating,
+          comment: review.reviewText,
+          date: new Date(review.createdAt || review.date)
+        }));
+      } else {
+        // No reviews found
+        this.dishReviews = [];
       }
-    ];
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+      this.dishReviews = [];
+    }
   }
 
   onWriteReview(dish: Dish) {

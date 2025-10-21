@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AdminNavComponent } from '../admin-nav/admin-nav';
 
-interface Dish {
-  id: number;
+// Display interface for the component
+interface DishDisplay {
+  id: any;
   name: string;
   cuisine: string;
   description: string;
@@ -22,8 +23,8 @@ interface Dish {
 })
 export class AdminViewDishesComponent implements OnInit {
   
-  dishes: Dish[] = [];
-  filteredDishes: Dish[] = [];
+  dishes: DishDisplay[] = [];
+  filteredDishes: DishDisplay[] = [];
   searchTerm: string = '';
   selectedCuisine: string = 'All Cuisine';
   currentPage: number = 1;
@@ -31,9 +32,10 @@ export class AdminViewDishesComponent implements OnInit {
   
   // Delete confirmation dialog
   showDeleteDialog: boolean = false;
-  dishToDelete: Dish | null = null;
+  dishToDelete: DishDisplay | null = null;
   
   cuisines: string[] = ['All Cuisine', 'Indian', 'American', 'Mediterranean', 'Japanese', 'Italian', 'Chinese'];
+  apiUrl = 'http://localhost:3001/dish';
 
   constructor(private router: Router) {}
 
@@ -41,66 +43,26 @@ export class AdminViewDishesComponent implements OnInit {
     this.loadDishes();
   }
 
-  loadDishes() {
-    // Sample data - in real app, this would come from API
-    this.dishes = [
-      {
-        id: 1,
-        name: 'Biryani',
-        cuisine: 'Indian',
-        description: 'Aromatic basmati rice cooked with tender chicken, spices, and herbs',
-        price: 250,
-        availability: 'In Stock',
-        image: 'https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg'
-      },
-      {
-        id: 2,
-        name: 'Burger',
-        cuisine: 'American',
-        description: 'Juicy grilled beef patty with cheese, lettuce, tomato, and sauce in a soft bun',
-        price: 180,
-        availability: 'In Stock',
-        image: 'https://www.southernliving.com/thmb/x4IHh8b0-bdyHHLzNoHY-SP6E8M=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Extra_Easy_Cheeseburger_006-b68cf-35c15b759d9a4e5a80f8a67c41a7a01f.jpg'
-      },
-      {
-        id: 3,
-        name: 'Salad',
-        cuisine: 'Mediterranean',
-        description: 'Fresh mixed greens with cucumber, tomato, olives, and feta cheese',
-        price: 150,
-        availability: 'In Stock',
-        image: 'https://natashaskitchen.com/wp-content/uploads/2019/01/Caesar-Salad-Recipe-3.jpg'
-      },
-      {
-        id: 4,
-        name: 'Sushi',
-        cuisine: 'Japanese',
-        description: 'Delicate rolls of vinegared rice with fresh fish and vegetables',
-        price: 400,
-        availability: 'In Stock',
-        image: 'https://www.justonecookbook.com/wp-content/uploads/2020/01/Salmon-Sushi-Roll-0286-I.jpg'
-      },
-      {
-        id: 5,
-        name: 'Pizza',
-        cuisine: 'Italian',
-        description: 'Fresh dough topped with mozzarella cheese and premium ingredients',
-        price: 300,
-        availability: 'In Stock',
-        image: 'https://www.recipetineats.com/wp-content/uploads/2020/05/Pizza_6-SQ.jpg'
-      },
-      {
-        id: 6,
-        name: 'Noodles',
-        cuisine: 'Chinese',
-        description: 'Stir-fried noodles with vegetables and savory sauce',
-        price: 220,
-        availability: 'In Stock',
-        image: 'https://www.recipetineats.com/wp-content/uploads/2023/09/Chicken-Chow-Mein_2.jpg'
-      }
-    ];
-    
-    this.filteredDishes = [...this.dishes];
+  async loadDishes() {
+    try {
+      const response = await fetch(`${this.apiUrl}/getAllDishes`);
+      const data = await response.json();
+      
+      // Map backend data to component format
+      this.dishes = data.map((dish: any) => ({
+        id: dish._id,
+        name: dish.dishName,
+        cuisine: dish.cuisine,
+        description: dish.description,
+        price: dish.price,
+        availability: dish.isAvailable ? 'In Stock' : 'Out of Stock',
+        image: dish.coverImage
+      }));
+      this.filteredDishes = [...this.dishes];
+    } catch (error) {
+      console.error('Error loading dishes:', error);
+      alert('Failed to load dishes. Please try again.');
+    }
   }
 
   onSearch() {
@@ -121,7 +83,7 @@ export class AdminViewDishesComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  getPaginatedDishes(): Dish[] {
+  getPaginatedDishes(): DishDisplay[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredDishes.slice(startIndex, endIndex);
@@ -135,25 +97,41 @@ export class AdminViewDishesComponent implements OnInit {
     this.currentPage = page;
   }
 
-  onEdit(dish: Dish) {
+  onEdit(dish: DishDisplay) {
     console.log('Edit dish:', dish);
     this.router.navigate(['/admin/dishes/edit', dish.id]);
   }
 
-  onDelete(dish: Dish) {
+  onDelete(dish: DishDisplay) {
     this.dishToDelete = dish;
     this.showDeleteDialog = true;
   }
 
-  confirmDelete() {
+  async confirmDelete() {
     if (this.dishToDelete) {
-      console.log('Delete dish:', this.dishToDelete);
-      // In real app, call API to delete
-      this.dishes = this.dishes.filter(d => d.id !== this.dishToDelete!.id);
-      this.applyFilters();
-      alert(`${this.dishToDelete.name} has been deleted successfully`);
+      const dishId = this.dishToDelete.id.toString();
+      const dishName = this.dishToDelete.name;
+      
+      try {
+        const response = await fetch(`${this.apiUrl}/deleteDish/${dishId}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        console.log('Delete response:', data);
+        // Remove from local array
+        this.dishes = this.dishes.filter(d => d.id !== this.dishToDelete!.id);
+        this.applyFilters();
+        alert(`${dishName} has been deleted successfully`);
+        this.closeDeleteDialog();
+      } catch (error) {
+        console.error('Error deleting dish:', error);
+        alert('Failed to delete dish. Please try again.');
+        this.closeDeleteDialog();
+      }
+    } else {
+      this.closeDeleteDialog();
     }
-    this.closeDeleteDialog();
   }
 
   closeDeleteDialog() {

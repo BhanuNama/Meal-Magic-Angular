@@ -82,23 +82,37 @@
                 accept="image/jpeg,image/jpg,image/png">
               <div class="text-danger small mt-1" *ngIf="errors.coverImage">{{ errors.coverImage }}</div>
               
-              <!-- Image Preview -->
-              <div class="text-center mt-3" *ngIf="imagePreview">
-                <img [src]="imagePreview" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;">
-              </div>
+            <!-- Image Preview -->
+            <div class="text-center mt-3" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;">
             </div>
+          </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button 
-                type="submit" 
-                class="btn text-white fw-bold"
-                style="background-color: #e07855;">
-                {{ isEditMode ? 'Update Dish' : 'Add Dish' }}
-              </button>
-            </div>
-            
-          </form>
+          <!-- Error Message -->
+          <div class="alert alert-danger mt-3" *ngIf="errorMsg">
+            {{ errorMsg }}
+          </div>
+
+          <!-- Submit and Cancel Buttons -->
+          <div class="d-grid gap-2 mt-3">
+            <button 
+              type="submit" 
+              class="btn text-white fw-bold"
+              style="background-color: #e07855;"
+              [disabled]="isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isLoading ? 'Please wait...' : (isEditMode ? 'Update Dish' : 'Add Dish') }}
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-secondary"
+              (click)="onCancel()"
+              [disabled]="isLoading">
+              Cancel
+            </button>
+          </div>
+          
+        </form>
         </div>
       </div>
     </div>

@@ -80,12 +80,22 @@
         </div>
       </div>
 
-      <button type="submit" class="btn register-btn w-100 text-white fw-bold" [disabled]="signupForm.invalid">
+      <!-- Error Message -->
+      <div class="alert alert-danger mt-3" *ngIf="errorMsg">
+        {{ errorMsg }}
+      </div>
+
+      <!-- Success Message -->
+      <div class="alert alert-success mt-3" *ngIf="successMsg">
+        {{ successMsg }}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-4" [disabled]="signupForm.invalid" style="background-color: #e54b38; border-color: #e54b38;">
         Register
       </button>
 
       <p class="text-center mt-3">
-        Already have an account? <a routerLink="/login" class="text-decoration-none">Sign in</a>
+        Already have an account? <a routerLink="/login" class="text-decoration-none fw-bold" style="color: #e54b38;">Sign in</a>
       </p>
     </form>
   </div>

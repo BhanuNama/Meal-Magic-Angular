@@ -46,6 +46,9 @@ export function passwordMatchValidator(
 export class SignupComponent implements OnInit {
   
   signupForm!: FormGroup;
+  apiUrl = 'http://localhost:3001/user';
+  errorMsg: string = '';
+  successMsg: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -93,7 +96,10 @@ export class SignupComponent implements OnInit {
   }
 
   // --- Form Submission ---
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
+    this.errorMsg = '';
+    this.successMsg = '';
+    
     // Mark all fields as touched to display validation messages
     this.signupForm.markAllAsTouched();
 
@@ -102,12 +108,40 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    // --- SIMULATED success for this example ---
-    console.log('Signup Form Submitted!', this.signupForm.value);
-    alert('User Registration is Successful!');
+    const { username, email, phone, password, role } = this.signupForm.value;
     
-    // Navigate back to login after successful registration
-    this.goToLogin();
+    try {
+      const response = await fetch(`${this.apiUrl}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          mobileNumber: phone,
+          password,
+          userRole: role
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Signup successful:', data);
+        this.successMsg = 'Registration successful! Redirecting to login...';
+        
+        // Wait 2 seconds then navigate to login
+        setTimeout(() => {
+          this.goToLogin();
+        }, 2000);
+      } else {
+        this.errorMsg = data.message || 'Registration failed. Please try again.';
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      this.errorMsg = 'Server error. Please try again later.';
+    }
   }
 
   // Method to navigate back to login
