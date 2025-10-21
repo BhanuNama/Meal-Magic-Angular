@@ -1,0 +1,92 @@
+<div class="signup-container d-flex align-items-center justify-content-center py-4">
+  <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+    
+    <div class="text-center mb-3">
+      <img src="https://via.placeholder.com/50x50.png?text=MM" alt="Meal Magic Logo" class="mb-2" />
+      <h2>Join Meal Magic!</h2>
+      <p class="text-muted">Create your account and start ordering delicious food.</p>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
+      
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa-regular fa-user"></i></span>
+          <input type="text" class="form-control" [class.is-invalid]="username?.invalid && (username?.dirty || username?.touched)" formControlName="username" placeholder="Enter your username" />
+        </div>
+        <div class="text-danger small mt-1" *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+          <span *ngIf="username?.errors?.['required']">Username is required!</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+          <input type="email" class="form-control" [class.is-invalid]="email?.invalid && (email?.dirty || email?.touched)" formControlName="email" placeholder="example@gmail.com" />
+        </div>
+        <div class="text-danger small mt-1" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          <span *ngIf="email?.errors?.['required']">Email is required!</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email format.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+          <input type="tel" class="form-control" [class.is-invalid]="phone?.invalid && (phone?.dirty || phone?.touched)" formControlName="phone" placeholder="Enter your phone number" />
+        </div>
+        <div class="text-danger small mt-1" *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)">
+          <span *ngIf="phone?.errors?.['required']">Phone number is required!</span>
+          <span *ngIf="phone?.errors?.['pattern']">Phone number must be 10 digits.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+          <input type="password" class="form-control" [class.is-invalid]="password?.invalid && (password?.dirty || password?.touched)" formControlName="password" placeholder="Password" />
+        </div>
+        <div class="text-danger small mt-1" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+          <span *ngIf="password?.errors?.['required']">Password is required!</span>
+          <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+          <input type="password" class="form-control" [class.is-invalid]="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" formControlName="confirmPassword" placeholder="Confirm password" />
+        </div>
+        <div class="text-danger small mt-1" *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)">
+          <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password.</span>
+          <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">Passwords do not match.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Role:</label>
+        <div class="d-flex gap-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="roleUser" value="User" formControlName="role" />
+            <label class="form-check-label" for="roleUser">User</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="roleAdmin" value="Admin" formControlName="role" />
+            <label class="form-check-label" for="roleAdmin">Admin</label>
+          </div>
+        </div>
+        <div class="text-danger small mt-1" *ngIf="role?.invalid && (role?.dirty || role?.touched)">
+          <span *ngIf="role?.errors?.['required']">Please select a role.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn register-btn w-100 text-white fw-bold" [disabled]="signupForm.invalid">
+        Register
+      </button>
+
+      <p class="text-center mt-3">
+        Already have an account? <a routerLink="/login" class="text-decoration-none">Sign in</a>
+      </p>
+    </form>
+  </div>
+</div>

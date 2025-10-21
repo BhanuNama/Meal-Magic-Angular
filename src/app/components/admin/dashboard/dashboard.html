@@ -1,0 +1,66 @@
+<app-admin-nav></app-admin-nav>
+
+<div class="container-fluid p-4" style="background-color: #f5f5f5; min-height: 100vh;">
+  <h1 class="text-center mb-4">Admin Dashboard</h1>
+
+  <!-- Statistics Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body py-3">
+          <h6 class="card-subtitle mb-2 text-muted text-uppercase">TOTAL USERS</h6>
+          <h1 class="display-4 fw-bold mb-0" style="color: #e54b38;">{{ stats.totalUsers }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body py-3">
+          <h6 class="card-subtitle mb-2 text-muted text-uppercase">TOTAL DISHES</h6>
+          <h1 class="display-4 fw-bold mb-0" style="color: #e54b38;">{{ stats.totalDishes }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body py-3">
+          <h6 class="card-subtitle mb-2 text-muted text-uppercase">TOTAL ORDERS</h6>
+          <h1 class="display-4 fw-bold mb-0" style="color: #e54b38;">{{ stats.totalOrders }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body py-3">
+          <h6 class="card-subtitle mb-2 text-muted text-uppercase">TOTAL REVIEWS</h6>
+          <h1 class="display-4 fw-bold mb-0" style="color: #e54b38;">{{ stats.totalReviews }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users List -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="mb-3">Users List</h4>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th>USERNAME</th>
+              <th>EMAIL</th>
+              <th>MOBILE NUMBER</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.mobileNumber }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

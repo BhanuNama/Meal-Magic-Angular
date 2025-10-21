@@ -1,0 +1,106 @@
+<app-admin-nav></app-admin-nav>
+
+<div class="container-fluid p-4" style="background-color: #f5f5f5; min-height: 100vh;">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4 fw-bold">{{ isEditMode ? 'Edit Dish' : 'Add New Dish' }}</h3>
+          
+          <form [formGroup]="dishForm" (ngSubmit)="onSubmit()" novalidate>
+            
+            <!-- Dish Name -->
+            <div class="mb-3">
+              <label for="dishName" class="form-label">Dish Name <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                id="dishName" 
+                class="form-control" 
+                [class.is-invalid]="errors.dishName"
+                formControlName="dishName" 
+                (blur)="validateField('dishName')">
+              <div class="text-danger small mt-1" *ngIf="errors.dishName">{{ errors.dishName }}</div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+              <textarea 
+                id="description" 
+                class="form-control" 
+                rows="4" 
+                [class.is-invalid]="errors.description"
+                formControlName="description" 
+                (blur)="validateField('description')"></textarea>
+              <div class="text-danger small mt-1" *ngIf="errors.description">{{ errors.description }}</div>
+            </div>
+
+            <!-- Cuisine -->
+            <div class="mb-3">
+              <label for="cuisine" class="form-label">Cuisine <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                id="cuisine" 
+                class="form-control" 
+                [class.is-invalid]="errors.cuisine"
+                formControlName="cuisine" 
+                (blur)="validateField('cuisine')">
+              <div class="text-danger small mt-1" *ngIf="errors.cuisine">{{ errors.cuisine }}</div>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+              <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+              <input 
+                type="number" 
+                id="price" 
+                class="form-control" 
+                [class.is-invalid]="errors.price"
+                formControlName="price" 
+                (blur)="validateField('price')">
+              <div class="text-danger small mt-1" *ngIf="errors.price">{{ errors.price }}</div>
+            </div>
+
+            <!-- Available Checkbox -->
+            <div class="mb-3 form-check">
+              <input 
+                type="checkbox" 
+                class="form-check-input" 
+                id="availability" 
+                formControlName="availability">
+              <label class="form-check-label" for="availability">Available</label>
+            </div>
+
+            <!-- Cover Image -->
+            <div class="mb-3">
+              <label for="coverImage" class="form-label">Cover Image <span class="text-danger">*</span></label>
+              <input 
+                type="file" 
+                id="coverImage" 
+                class="form-control" 
+                (change)="onFileChange($event)" 
+                accept="image/jpeg,image/jpg,image/png">
+              <div class="text-danger small mt-1" *ngIf="errors.coverImage">{{ errors.coverImage }}</div>
+              
+              <!-- Image Preview -->
+              <div class="text-center mt-3" *ngIf="imagePreview">
+                <img [src]="imagePreview" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn text-white fw-bold"
+                style="background-color: #e07855;">
+                {{ isEditMode ? 'Update Dish' : 'Add Dish' }}
+              </button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.login-container {
+  min-height: 100vh;
+  
+}
+
+.card-icon {
+  font-size: 3rem;
+  color: #e54b38;
+}
+
+.login-btn {
+  background-color: #e54b38;
+  border: none;
+}
+
+.login-btn:hover {
+  background-color: #c43e2d;
+}

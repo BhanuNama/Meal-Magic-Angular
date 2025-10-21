@@ -1,0 +1,12 @@
+.signup-container {
+  min-height: 100vh;
+}
+
+.register-btn {
+  background-color: #e54b38;
+  border: none;
+}
+
+.register-btn:hover {
+  background-color: #c43e2d;
+}

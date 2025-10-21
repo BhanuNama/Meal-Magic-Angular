@@ -1,0 +1,110 @@
+<app-admin-nav></app-admin-nav>
+
+<div class="container-fluid p-4" style="background-color: #f5f5f5; min-height: 100vh;">
+  <h2 class="text-center mb-4 fw-bold">View Dish Reviews</h2>
+
+  <!-- Search and Sort -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-5">
+      <input 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search reviews...">
+    </div>
+    <div class="col-md-4">
+      <select 
+        class="form-select" 
+        [(ngModel)]="sortOrder"
+        (change)="onSortChange()">
+        <option value="asc">Sort by Date: Ascending</option>
+        <option value="desc">Sort by Date: Descending</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Reviews List -->
+  <div class="row g-3 mb-4" *ngIf="filteredReviews.length > 0; else noReviews">
+    <div class="col-md-6 col-lg-4" *ngFor="let review of getPaginatedReviews()">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body p-3">
+          <h5 class="card-title fw-bold text-center mb-3" style="color: #6f42c1;">{{ review.dishName }}</h5>
+          
+          <div class="text-center mb-2">
+            <i class="fas fa-star" *ngFor="let star of getStarArray(review.rating)" style="color: #ffc107;"></i>
+          </div>
+          
+          <p class="text-center mb-2"><strong>Date:</strong> {{ review.date | date: 'MMM d, y' }}</p>
+          
+          <p class="text-center mb-3">{{ review.reviewText }}</p>
+          
+          <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-primary btn-sm" (click)="viewDish(review.dishId)">View Dish</button>
+            <button class="btn btn-primary btn-sm" (click)="viewUser(review.userId)">View User</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noReviews>
+    <div class="alert alert-info text-center">No reviews found matching your criteria.</div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <nav *ngIf="getTotalPages() > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Previous</a>
+      </li>
+      <li class="page-item active">
+        <span class="page-link">Page {{ currentPage }} of {{ getTotalPages() }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Dish Modal -->
+<div class="modal fade" [class.show]="showDishModal" [style.display]="showDishModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedDish">
+      <div class="modal-header">
+        <h5 class="modal-title">Dish Details</h5>
+        <button type="button" class="btn-close" (click)="closeDishModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <img [src]="selectedDish.image" class="img-fluid rounded" [alt]="selectedDish.name" style="max-height: 200px;">
+        </div>
+        <p><strong>Name:</strong> {{ selectedDish.name }}</p>
+        <p><strong>Price:</strong> ₹{{ selectedDish.price }}</p>
+        <p><strong>Cuisine:</strong> {{ selectedDish.cuisine }}</p>
+        <p><strong>Description:</strong> {{ selectedDish.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showDishModal" *ngIf="showDishModal" (click)="closeDishModal()"></div>
+
+<!-- User Modal -->
+<div class="modal fade" [class.show]="showUserModal" [style.display]="showUserModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedUser">
+      <div class="modal-header">
+        <h5 class="modal-title">User Profile</h5>
+        <button type="button" class="btn-close" (click)="closeUserModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5>{{ selectedUser.username }}</h5>
+        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedUser.phone }}</p>
+        <p><strong>Member Since:</strong> {{ selectedUser.joinDate | date: 'mediumDate' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showUserModal" *ngIf="showUserModal" (click)="closeUserModal()"></div>

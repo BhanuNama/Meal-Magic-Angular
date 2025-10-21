@@ -1,0 +1,12 @@
+.dish-card {
+  transition: transform 0.2s;
+}
+
+.dish-card:hover {
+  transform: translateY(-5px);
+}
+
+.dish-image {
+  height: 200px;
+  object-fit: cover;
+}
