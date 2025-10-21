@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-home-page',
   imports: [],
   templateUrl: './home-page.html',
-  styleUrl: './home-page.css'
+  styleUrls: ['./home-page.css']
 })
 export class HomePage {
 
 }
+

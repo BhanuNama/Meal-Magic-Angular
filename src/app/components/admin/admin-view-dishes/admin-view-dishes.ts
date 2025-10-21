@@ -16,10 +16,11 @@ interface DishDisplay {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-admin-view-dishes',
   imports: [CommonModule, FormsModule, RouterModule, AdminNavComponent],
   templateUrl: './admin-view-dishes.html',
-  styleUrl: './admin-view-dishes.css'
+  styleUrls: ['./admin-view-dishes.css']
 })
 export class AdminViewDishesComponent implements OnInit {
   

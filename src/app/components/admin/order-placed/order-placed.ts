@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AdminNavComponent } from '../admin-nav/admin-nav';
 
 @Component({
+  standalone: true,
   selector: 'app-order-placed',
   imports: [CommonModule, AdminNavComponent],
   template: `

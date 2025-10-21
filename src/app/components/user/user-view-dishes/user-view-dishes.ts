@@ -22,10 +22,11 @@ interface Review {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-user-view-dishes',
   imports: [CommonModule, FormsModule, UserNavComponent],
   templateUrl: './user-view-dishes.html',
-  styleUrl: './user-view-dishes.css'
+  styleUrls: ['./user-view-dishes.css']
 })
 export class UserViewDishesComponent implements OnInit {
   

@@ -14,3 +14,4 @@ export const routes: Routes = [
   { path: 'user', loadComponent: () => import('./components/user/user-view-dishes/user-view-dishes').then(m => m.UserViewDishesComponent) },
   { path: '**', redirectTo: '/login' }
 ];
+

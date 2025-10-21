@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { AdminNavComponent } from '../admin-nav/admin-nav';
 
 @Component({
+  standalone: true,
   selector: 'app-dish-form',
   imports: [ReactiveFormsModule, RouterModule, CommonModule, AdminNavComponent],
   templateUrl: './dish-form.html',
-  styleUrl: './dish-form.css'
+  styleUrls: ['./dish-form.css']
 })
 export class DishFormComponent implements OnInit {
   

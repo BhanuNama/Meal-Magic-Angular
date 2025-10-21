@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-user-my-review',
   imports: [],
   templateUrl: './user-my-review.html',
-  styleUrl: './user-my-review.css'
+  styleUrls: ['./user-my-review.css']
 })
 export class UserMyReview {
 
 }
+

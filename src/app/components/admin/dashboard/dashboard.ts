@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { AdminNavComponent } from '../admin-nav/admin-nav';
 
 @Component({
+  standalone: true,
   selector: 'app-dashboard',
   imports: [CommonModule, AdminNavComponent],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrls: ['./dashboard.css']
 })
 export class DashboardComponent implements OnInit {
   

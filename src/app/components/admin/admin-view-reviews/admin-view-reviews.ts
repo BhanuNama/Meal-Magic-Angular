@@ -32,10 +32,11 @@ interface User {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-admin-view-reviews',
   imports: [CommonModule, FormsModule, AdminNavComponent, DatePipe],
   templateUrl: './admin-view-reviews.html',
-  styleUrl: './admin-view-reviews.css'
+  styleUrls: ['./admin-view-reviews.css']
 })
 export class AdminViewReviewsComponent implements OnInit {
   

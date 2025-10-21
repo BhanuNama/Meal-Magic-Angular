@@ -38,10 +38,11 @@ export function passwordMatchValidator(
 
 // --- Component Definition ---
 @Component({
+  standalone: true,
   selector: 'app-signup',
   imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './signup.html',
-  styleUrl: './signup.css'
+  styleUrls: ['./signup.css']
 })
 export class SignupComponent implements OnInit {
   

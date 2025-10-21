@@ -4,10 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class LoginComponent implements OnInit {
 
@@ -114,3 +115,4 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/signup']);
   }
 }
+

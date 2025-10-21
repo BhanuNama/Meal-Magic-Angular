@@ -3,10 +3,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-user-nav',
   imports: [RouterModule, CommonModule],
   templateUrl: './user-nav.html',
-  styleUrl: './user-nav.css'
+  styleUrls: ['./user-nav.css']
 })
 export class UserNavComponent {
   currentUser = this.getCurrentUser();
