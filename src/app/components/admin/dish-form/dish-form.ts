@@ -235,7 +235,7 @@ export class DishFormComponent implements OnInit {
         console.log('Dish updated successfully:', data);
         alert('Dish Updated Successfully!');
         this.router.navigate(['/admin/dishes']);
-      } else {
+      } else{
         this.errorMsg = data.message || 'Failed to update dish';
       }
     } catch (error) {

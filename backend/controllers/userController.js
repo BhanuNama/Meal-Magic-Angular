@@ -181,3 +181,30 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Get user by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id, { password: 0 }); // Exclude password field
+    
+    if (!user) {
+      return res.status(404).json({ 
+        error: true, 
+        message: 'User not found' 
+      });
+    }
+    
+    res.status(200).json({ 
+      error: false, 
+      message: 'User found successfully', 
+      data: user 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      error: true, 
+      message: error.message 
+    });
+  }
+};
+

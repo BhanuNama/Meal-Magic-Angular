@@ -1,1 +1,64 @@
-<p>user-review works!</p>
+<app-user-nav></app-user-nav>
+
+<div class="bg-light min-vh-100 p-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4 fw-bold" style="color: #f05623;">Share Your Review 🍜</h2>
+          
+          <form (ngSubmit)="onSubmit()">
+            <!-- Review Text Area -->
+            <div class="mb-4">
+              <label for="reviewText" class="form-label fw-bold">Your Review:</label>
+              <textarea 
+                id="reviewText"
+                class="form-control" 
+                rows="5" 
+                style="resize: vertical; min-height: 120px;"
+                [(ngModel)]="reviewText"
+                name="reviewText"
+                placeholder="Write your review here..."
+                required>
+              </textarea>
+            </div>
+
+            <!-- Star Rating -->
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold d-block mb-3">Star Rating:</label>
+              <div class="d-flex justify-content-center gap-3">
+                <span 
+                  *ngFor="let emoji of starEmojis; let i = index"
+                  class="star-emoji"
+                  [class.selected]="rating === i + 1"
+                  (click)="selectRating(i)">
+                  {{ emoji }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn btn-lg fw-bold"
+                style="background-color: #f05623; border-color: #f05623; color: white;"
+                [disabled]="!reviewText.trim() || rating === 0">
+                Submit Review
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+  <div class="toast show" [class.bg-success]="toastType === 'success'" [class.bg-danger]="toastType === 'error'" role="alert" *ngIf="showToast">
+    <div class="toast-body text-white fw-semibold text-center">
+      {{ toastMessage }}
+    </div>
+  </div>
+</div>

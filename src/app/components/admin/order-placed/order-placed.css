@@ -1,0 +1,12 @@
+/* Order Card Hover Effect */
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Custom Status Badge Colors */
+.badge-pending { background-color: #ffc107; color: #000; }
+.badge-accepted { background-color: #17a2b8; color: #fff; }
+.badge-preparing { background-color: #6f42c1; color: #fff; }
+.badge-outfordelivery { background-color: #fd7e14; color: #fff; }
+.badge-delivered { background-color: #28a745; color: #fff; }

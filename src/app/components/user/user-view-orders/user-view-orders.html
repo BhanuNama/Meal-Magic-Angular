@@ -1,1 +1,133 @@
-<p>user-view-orders works!</p>
+<app-user-nav></app-user-nav>
+
+<div class="container mt-4 mb-5">
+  <h2 class="text-center mb-4 fw-bold text-primary">Dish Orders</h2>
+
+  <!-- Orders List -->
+  <div class="row g-3">
+    <div class="col-12" *ngFor="let order of orders">
+      <div class="card order-card shadow-sm">
+        <div class="card-body">
+          <div class="border-bottom pb-2 mb-3">
+            <strong>Order ID:</strong> {{ order.orderId }}
+          </div>
+          
+          <p class="mb-2"><strong>Status:</strong> 
+            <span class="badge" 
+              [class.bg-warning]="order.status === 'Pending'"
+              [class.bg-info]="order.status === 'Accepted'"
+              [class.bg-primary]="order.status === 'Preparing'"
+              [class.bg-orange]="order.status === 'OutForDelivery'"
+              [class.bg-success]="order.status === 'Delivered'"
+              [class.text-dark]="order.status === 'Pending'">
+              {{ order.status }}
+            </span>
+          </p>
+          <p class="mb-2"><strong>Total:</strong> ₹{{ order.totalAmount }}</p>
+          <p class="mb-2"><strong>Delivery Address:</strong> {{ order.shippingAddress }}</p>
+          <p class="mb-2"><strong>Billing Address:</strong> {{ order.billingAddress }}</p>
+          <p class="mb-2"><strong>Date:</strong> {{ order.orderDate | date: 'MMM d, y' }}</p>
+          <p class="mb-3" *ngIf="order.items.length > 0">
+            <strong>Dish:</strong> {{ order.items[0].dishName }} 
+            <strong>Qty:</strong> {{ order.items[0].quantity }}
+          </p>
+
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <button class="btn btn-primary btn-sm flex-fill" (click)="trackOrder(order)">Track Order</button>
+            <button class="btn btn-success btn-sm flex-fill" (click)="viewItems(order)">View Items</button>
+            <button class="btn btn-danger btn-sm flex-fill" (click)="openCancelModal(order)" *ngIf="order.status === 'Pending'">Cancel Order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="orders.length === 0">
+      <div class="alert alert-info text-center">No orders found</div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Tracking Modal -->
+<div class="modal fade" [class.show]="showTrackingModal" [style.display]="showTrackingModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Order Tracking</h5>
+        <button type="button" class="btn-close" (click)="closeTrackingModal()"></button>
+      </div>
+      <div class="modal-body p-4" *ngIf="selectedOrder">
+        <div class="d-flex justify-content-between align-items-start position-relative p-3">
+          <div class="step d-flex flex-column align-items-center" *ngFor="let step of getTrackingSteps(); let i = index"
+               [class.completed]="isStepCompleted(i)"
+               [class.active]="isStepActive(i)">
+            <div class="step-icon fw-bold" style="z-index: 2;">
+              <i class="fas fa-check" *ngIf="isStepCompleted(i)"></i>
+              <span *ngIf="!isStepCompleted(i)">{{ i + 1 }}</span>
+            </div>
+            <div class="mt-2 text-center small fw-semibold"
+                 [class.text-success]="isStepCompleted(i) || isStepActive(i)"
+                 [class.text-muted]="!isStepCompleted(i) && !isStepActive(i)">
+              {{ step }}
+            </div>
+            <div class="step-line" *ngIf="i < getTrackingSteps().length - 1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showTrackingModal" *ngIf="showTrackingModal" (click)="closeTrackingModal()"></div>
+
+<!-- Order Items Modal -->
+<div class="modal fade" [class.show]="showItemsModal" [style.display]="showItemsModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Order Items</h5>
+        <button type="button" class="btn-close" (click)="closeItemsModal()"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedOrder">
+        <div class="border-bottom pb-3 mb-3" *ngFor="let item of selectedOrder.items; last as isLast" [class.border-0]="isLast" [class.mb-0]="isLast" [class.pb-0]="isLast">
+          <div class="d-flex align-items-center">
+            <img [src]="item.coverImage" [alt]="item.dishName" class="rounded me-3" style="width: 80px; height: 80px; object-fit: cover;">
+            <div class="flex-grow-1">
+              <p class="mb-1"><strong>Name:</strong> {{ item.dishName }}</p>
+              <p class="mb-1"><strong>Cuisine:</strong> {{ item.cuisine }}</p>
+              <p class="mb-1"><strong>Qty:</strong> {{ item.quantity }}</p>
+              <p class="mb-0"><strong>Price:</strong> ₹{{ item.price }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showItemsModal" *ngIf="showItemsModal" (click)="closeItemsModal()"></div>
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" [class.show]="showCancelModal" [style.display]="showCancelModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" (click)="closeCancelModal()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fw-bold">Are you sure you want to cancel this order?</p>
+        <div class="d-flex gap-2 justify-content-center mt-3">
+          <button class="btn btn-danger px-4" (click)="confirmCancelOrder()">Yes, Cancel Order</button>
+          <button class="btn btn-secondary px-4" (click)="closeCancelModal()">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showCancelModal" *ngIf="showCancelModal" (click)="closeCancelModal()"></div>
+
+<!-- Success Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div class="toast show bg-success" role="alert" *ngIf="showToast" style="min-width: 250px;">
+    <div class="toast-body text-white">
+      {{ toastMessage }}
+    </div>
+  </div>
+</div>

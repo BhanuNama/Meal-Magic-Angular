@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserNavComponent } from '../user-nav/user-nav';
 
 interface Dish {
@@ -42,7 +43,7 @@ export class UserViewDishesComponent implements OnInit {
   selectedDish: Dish | null = null;
   dishReviews: Review[] = [];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.loadDishes();
@@ -94,12 +95,46 @@ export class UserViewDishesComponent implements OnInit {
   }
 
   onAddToCart(dish: Dish, quantity: number) {
-    if (quantity > 0) {
-      console.log('Add to cart:', dish.name, 'Qty:', quantity);
-      alert(`Added ${quantity} ${dish.name} to cart!`);
-    } else {
+    if (quantity <= 0) {
       alert('Please select a quantity');
+      return;
     }
+
+    // Get existing cart from localStorage
+    const cartString = localStorage.getItem('cart');
+    let cart: any[] = [];
+    
+    if (cartString) {
+      try {
+        cart = JSON.parse(cartString);
+      } catch (error) {
+        console.error('Error parsing cart:', error);
+        cart = [];
+      }
+    }
+
+    // Check if item already exists in cart
+    const existingItemIndex = cart.findIndex(item => item.dishId === dish.id);
+    
+    if (existingItemIndex >= 0) {
+      // Update quantity if item exists
+      cart[existingItemIndex].quantity += quantity;
+    } else {
+      // Add new item to cart
+      cart.push({
+        dishId: dish.id,
+        dishName: dish.name,
+        quantity: quantity
+      });
+    }
+
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Dispatch custom event for cart update
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
+    
+    alert(`Added ${quantity} ${dish.name} to cart!`);
   }
 
   onViewReviews(dish: Dish) {
@@ -134,8 +169,8 @@ export class UserViewDishesComponent implements OnInit {
 
   onWriteReview(dish: Dish) {
     console.log('Write review for:', dish.name);
-    alert(`Write Review functionality for ${dish.name} will be implemented`);
-    // In real app, navigate to review submission page
+    // Navigate to review page with dish ID
+    this.router.navigate(['/user/review', dish.id]);
   }
 
   closeReviewsModal() {

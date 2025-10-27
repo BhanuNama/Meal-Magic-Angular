@@ -1,0 +1,19 @@
+/* Shake Animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.error-icon i {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Button Hover Effects */
+.btn-primary:hover, .btn-secondary:hover, .btn-success:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}

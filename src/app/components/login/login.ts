@@ -89,11 +89,19 @@ export class LoginComponent implements OnInit {
         
         // Store user data and token in localStorage
         localStorage.setItem('user', JSON.stringify({
+          userId: data.data.user.id,  // Backend returns 'id', not '_id'
           email: data.data.user.email,
           role: data.data.user.userRole,
           username: data.data.user.username,
           token: data.data.token
         }));
+        
+        console.log('User stored in localStorage:', {
+          userId: data.data.user.id,
+          email: data.data.user.email,
+          role: data.data.user.userRole,
+          username: data.data.user.username
+        });
         
         // Navigate based on role
         if (data.data.user.userRole === 'Admin') {

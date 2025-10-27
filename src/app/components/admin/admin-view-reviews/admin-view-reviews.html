@@ -5,29 +5,29 @@
 
   <!-- Search and Sort -->
   <div class="row g-3 mb-4">
-    <div class="col-md-5">
+    <div class="col-md-6">
       <input 
         type="text" 
         class="form-control" 
         [(ngModel)]="searchTerm"
         (input)="onSearch()"
-        placeholder="Search reviews...">
+        placeholder="Search by dish name or username...">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <select 
         class="form-select" 
         [(ngModel)]="sortOrder"
         (change)="onSortChange()">
-        <option value="asc">Sort by Date: Ascending</option>
-        <option value="desc">Sort by Date: Descending</option>
+        <option value="asc">Sort by Date: Oldest First</option>
+        <option value="desc">Sort by Date: Newest First</option>
       </select>
     </div>
   </div>
 
   <!-- Reviews List -->
-  <div class="row g-3 mb-4" *ngIf="filteredReviews.length > 0; else noReviews">
+  <div class="row g-3 mb-4" *ngIf="getPaginatedReviews().length > 0; else noReviews">
     <div class="col-md-6 col-lg-4" *ngFor="let review of getPaginatedReviews()">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100 shadow-sm border-0 rounded-3">
         <div class="card-body p-3">
           <h5 class="card-title fw-bold text-center mb-3" style="color: #6f42c1;">{{ review.dishName }}</h5>
           
@@ -35,13 +35,23 @@
             <i class="fas fa-star" *ngFor="let star of getStarArray(review.rating)" style="color: #ffc107;"></i>
           </div>
           
-          <p class="text-center mb-2"><strong>Date:</strong> {{ review.date | date: 'MMM d, y' }}</p>
+          <p class="text-center text-muted small mb-2">
+            <i class="fas fa-user me-1"></i>{{ review.username }}
+          </p>
           
-          <p class="text-center mb-3">{{ review.reviewText }}</p>
+          <p class="text-center text-muted small mb-2">
+            <i class="fas fa-calendar me-1"></i>{{ review.date | date: 'MMM d, y' }}
+          </p>
+          
+          <p class="text-center mb-3 small" style="min-height: 3rem;">{{ review.reviewText }}</p>
           
           <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-primary btn-sm" (click)="viewDish(review.dishId)">View Dish</button>
-            <button class="btn btn-primary btn-sm" (click)="viewUser(review.userId)">View User</button>
+            <button class="btn btn-primary btn-sm flex-fill" (click)="viewDish(review.dishId)" *ngIf="review.dishId">
+              <i class="fas fa-eye me-1"></i>View Dish
+            </button>
+            <button class="btn btn-success btn-sm flex-fill" (click)="viewUser(review.userId)" *ngIf="review.userId">
+              <i class="fas fa-user me-1"></i>View User
+            </button>
           </div>
         </div>
       </div>
@@ -49,20 +59,22 @@
   </div>
 
   <ng-template #noReviews>
-    <div class="alert alert-info text-center">No reviews found matching your criteria.</div>
+    <div class="alert alert-info text-center">
+      <i class="fas fa-info-circle me-2"></i>No reviews found matching your criteria.
+    </div>
   </ng-template>
 
   <!-- Pagination -->
   <nav *ngIf="getTotalPages() > 1">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Previous</a>
+        <a class="page-link" (click)="currentPage > 1 && onPageChange(currentPage - 1)" style="cursor: pointer;">Previous</a>
       </li>
       <li class="page-item active">
         <span class="page-link">Page {{ currentPage }} of {{ getTotalPages() }}</span>
       </li>
       <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
-        <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Next</a>
+        <a class="page-link" (click)="currentPage < getTotalPages() && onPageChange(currentPage + 1)" style="cursor: pointer;">Next</a>
       </li>
     </ul>
   </nav>
@@ -71,19 +83,20 @@
 <!-- Dish Modal -->
 <div class="modal fade" [class.show]="showDishModal" [style.display]="showDishModal ? 'block' : 'none'" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" *ngIf="selectedDish">
-      <div class="modal-header">
-        <h5 class="modal-title">Dish Details</h5>
+    <div class="modal-content border-0 rounded-3" *ngIf="selectedDish">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-primary">Dish Details</h5>
         <button type="button" class="btn-close" (click)="closeDishModal()"></button>
       </div>
-      <div class="modal-body">
-        <div class="text-center mb-3">
-          <img [src]="selectedDish.image" class="img-fluid rounded" [alt]="selectedDish.name" style="max-height: 200px;">
-        </div>
-        <p><strong>Name:</strong> {{ selectedDish.name }}</p>
-        <p><strong>Price:</strong> ₹{{ selectedDish.price }}</p>
-        <p><strong>Cuisine:</strong> {{ selectedDish.cuisine }}</p>
-        <p><strong>Description:</strong> {{ selectedDish.description }}</p>
+      <div class="modal-body text-center pt-0">
+        <img [src]="selectedDish.coverImage" class="img-fluid rounded mb-3" [alt]="selectedDish.dishName" style="max-height: 200px; object-fit: cover;">
+        <h5 class="fw-bold mb-2">{{ selectedDish.dishName }}</h5>
+        <p class="text-success fw-bold fs-5 mb-2">₹{{ selectedDish.price }}</p>
+        <p class="text-muted mb-1"><strong>Cuisine:</strong> {{ selectedDish.cuisine }}</p>
+        <p class="text-muted mb-0"><strong>Description:</strong> {{ selectedDish.description }}</p>
+      </div>
+      <div class="modal-footer border-0 pt-0 justify-content-center">
+        <button type="button" class="btn btn-secondary" (click)="closeDishModal()">Close</button>
       </div>
     </div>
   </div>
@@ -92,17 +105,23 @@
 
 <!-- User Modal -->
 <div class="modal fade" [class.show]="showUserModal" [style.display]="showUserModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" *ngIf="selectedUser">
-      <div class="modal-header">
-        <h5 class="modal-title">User Profile</h5>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content border-0 rounded-3" *ngIf="selectedUser">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-success">User Profile</h5>
         <button type="button" class="btn-close" (click)="closeUserModal()"></button>
       </div>
-      <div class="modal-body">
-        <h5>{{ selectedUser.username }}</h5>
-        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Phone:</strong> {{ selectedUser.phone }}</p>
-        <p><strong>Member Since:</strong> {{ selectedUser.joinDate | date: 'mediumDate' }}</p>
+      <div class="modal-body pt-0">
+        <div class="text-center mb-3">
+          <i class="fas fa-user-circle fa-4x text-muted"></i>
+        </div>
+        <h5 class="text-center mb-3">{{ selectedUser.username }}</h5>
+        <p class="mb-2 small"><strong>Email:</strong> <span class="text-muted">{{ selectedUser.email }}</span></p>
+        <p class="mb-2 small"><strong>Phone:</strong> <span class="text-muted">{{ selectedUser.mobileNumber }}</span></p>
+        <p class="mb-0 small"><strong>Member Since:</strong> <span class="text-muted">{{ selectedUser.createdAt | date: 'mediumDate' }}</span></p>
+      </div>
+      <div class="modal-footer border-0 pt-0 justify-content-center">
+        <button type="button" class="btn btn-secondary" (click)="closeUserModal()">Close</button>
       </div>
     </div>
   </div>

@@ -2,20 +2,56 @@
   <div class="container-fluid">
     <span class="navbar-brand text-dark fw-bold mb-0">Meal Magic</span>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <span class="text-white px-3 py-2 rounded" style="background-color: rgba(0,0,0,0.2);">{{ currentUser.username }} / {{ currentUser.role }}</span>
-        <a class="nav-link text-white" routerLink="/admin/dashboard" routerLinkActive="active">Home</a>
-        <a class="nav-link text-white" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
-        <a class="nav-link text-white" routerLink="/admin/dishes" routerLinkActive="active">Dishes</a>
-        <a class="nav-link text-white" routerLink="/admin/orders" routerLinkActive="active">Orders</a>
-        <a class="nav-link text-white" routerLink="/admin/reviews" routerLinkActive="active">Reviews</a>
-        <button class="btn btn-light btn-sm" (click)="onLogout()">Logout</button>
+    <div class="collapse navbar-collapse" id="adminNav">
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <span class="text-white px-3 py-2 rounded fw-bold" style="background-color: rgba(0,0,0,0.2);">
+          {{ currentUser.username }} / {{ currentUser.role }}
+        </span>
+        <a class="nav-link text-white px-2" routerLink="/admin/dashboard" routerLinkActive="active">Home</a>
+        <a class="nav-link text-white px-2" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+        
+        <!-- Dishes Dropdown -->
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white px-2" href="javascript:void(0)" role="button" data-bs-toggle="dropdown">
+            Dishes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/admin/dishes/add">Add Dish</a></li>
+            <li><a class="dropdown-item" routerLink="/admin/dishes">View All Dishes</a></li>
+          </ul>
+        </div>
+        
+        <a class="nav-link text-white px-2" routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+        <a class="nav-link text-white px-2" routerLink="/admin/reviews" routerLinkActive="active">Reviews</a>
+        
+        <button class="btn btn-light btn-sm fw-bold" (click)="openLogoutPopup()" style="color: #f05623;">
+          Logout
+        </button>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" [class.show]="showLogoutPopup" [style.display]="showLogoutPopup ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" (click)="closeLogoutPopup()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to logout?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" (click)="closeLogoutPopup()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showLogoutPopup" *ngIf="showLogoutPopup" (click)="closeLogoutPopup()"></div>

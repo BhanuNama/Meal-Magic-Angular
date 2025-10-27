@@ -1,3 +1,30 @@
-.user-navbar {
-  background-color: #e54b38;
+/* Cart Overlay Slide Animation */
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  z-index: 1050;
+  transition: right 0.3s ease-in-out;
+}
+
+.cart-overlay.show {
+  right: 0;
+}
+
+/* Backdrop Fade */
+.cart-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.cart-overlay-backdrop.show {
+  opacity: 1;
+  visibility: visible;
 }

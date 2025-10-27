@@ -2,21 +2,89 @@
   <div class="container-fluid">
     <span class="navbar-brand text-dark fw-bold mb-0">Meal Magic</span>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#userNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="userNav">
       <div class="ms-auto d-flex align-items-center gap-2">
-        <span class="text-white px-3 py-2 rounded" style="background-color: rgba(0,0,0,0.2);">{{ currentUser.username }} / {{ currentUser.role }}</span>
-        <a class="nav-link text-white px-2" routerLink="/user/home" routerLinkActive="active">Home</a>
-        <a class="nav-link text-white px-2" routerLink="/user" routerLinkActive="active">Dishes</a>
-        <a class="nav-link text-white px-2" routerLink="/user/reviews" routerLinkActive="active">Reviews</a>
-        <button class="btn btn-light btn-sm" routerLink="/user/cart">
+        <span class="text-white px-3 py-2 rounded fw-bold" style="background-color: rgba(0,0,0,0.2);">
+          {{ currentUser.username }} / {{ currentUser.role }}
+        </span>
+        <a class="nav-link text-white px-2 fw-semibold" routerLink="/user/home" routerLinkActive="text-decoration-underline">Home</a>
+        <a class="nav-link text-white px-2 fw-semibold" routerLink="/user" routerLinkActive="text-decoration-underline">Dishes</a>
+        <a class="nav-link text-white px-2 fw-semibold" routerLink="/user/orders" routerLinkActive="text-decoration-underline">Orders</a>
+        <a class="nav-link text-white px-2 fw-semibold" routerLink="/user/my-reviews" routerLinkActive="text-decoration-underline">Review</a>
+        
+        <!-- Cart Button with Badge -->
+        <button class="btn btn-light btn-sm position-relative" (click)="toggleCartOverlay()">
           <i class="fas fa-shopping-cart"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;" *ngIf="cartItemCount > 0">
+            {{ cartItemCount }}
+          </span>
         </button>
-        <button class="btn btn-light btn-sm fw-bold" (click)="onLogout()" style="color: #f05623;">Logout</button>
+        
+        <button class="btn btn-light btn-sm fw-bold" (click)="openLogoutPopup()" style="color: #f05623;">
+          Logout
+        </button>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- Cart Overlay -->
+<div class="cart-overlay bg-white shadow-lg d-flex flex-column" [class.show]="showCartOverlay">
+  <div class="d-flex flex-column h-100">
+    <!-- Header -->
+    <div class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold">Your Cart</h5>
+      <button type="button" class="btn-close" (click)="closeCartOverlay()"></button>
+    </div>
+    
+    <!-- Body -->
+    <div class="flex-grow-1 overflow-auto p-3">
+      <div *ngIf="cartItems.length === 0" class="text-center text-muted py-5">
+        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+        <p>Your cart is empty</p>
+      </div>
+      
+      <div class="list-group" *ngIf="cartItems.length > 0">
+        <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of cartItems">
+          <div>
+            <strong>{{ item.dishName }}</strong>
+            <br>
+            <small class="text-muted">Quantity: {{ item.quantity }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="p-3 border-top bg-light" *ngIf="cartItems.length > 0">
+      <button class="btn btn-outline-danger w-100 mb-2" (click)="clearCart()">Clear Cart</button>
+      <button class="btn btn-success w-100" (click)="goToCheckout()">Checkout</button>
+    </div>
+  </div>
+</div>
+<div class="cart-overlay-backdrop" [class.show]="showCartOverlay" *ngIf="showCartOverlay" (click)="closeCartOverlay()"></div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" [class.show]="showLogoutPopup" [style.display]="showLogoutPopup ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content border-0 rounded-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">Confirm Logout</h5>
+        <button type="button" class="btn-close" (click)="closeLogoutPopup()"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <i class="fas fa-sign-out-alt fa-3x text-danger mb-3"></i>
+        <p class="mb-0">Are you sure you want to logout?</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-secondary" (click)="closeLogoutPopup()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showLogoutPopup" *ngIf="showLogoutPopup" (click)="closeLogoutPopup()"></div>

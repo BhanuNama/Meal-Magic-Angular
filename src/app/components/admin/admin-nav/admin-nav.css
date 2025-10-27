@@ -1,3 +1,20 @@
 .admin-navbar {
   background-color: #e54b38;
 }
+
+/* Dropdown menu styles */
+.dropdown-menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item:hover {
+  background-color: #f05623;
+  color: white;
+}
+
+/* Navigation link active state */
+.nav-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+}

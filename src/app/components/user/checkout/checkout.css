@@ -1,0 +1,14 @@
+/* Card Left Borders */
+.invoice-card {
+  border-left: 4px solid #ffc107;
+}
+
+.shipping-card {
+  border-left: 4px solid #007bff;
+}
+
+/* Button Hover Effect */
+.btn-success:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+}

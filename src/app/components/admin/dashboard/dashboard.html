@@ -58,6 +58,11 @@
               <td>{{ user.email }}</td>
               <td>{{ user.mobileNumber }}</td>
             </tr>
+            <tr *ngIf="users.length === 0">
+              <td colspan="3" class="text-center text-muted py-4">
+                <i class="fas fa-users me-2"></i>No users found
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
