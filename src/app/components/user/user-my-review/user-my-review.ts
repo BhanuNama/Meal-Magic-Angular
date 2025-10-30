@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UserNavComponent } from '../user-nav/user-nav';
 import { ReviewService } from '../../../services/review.service';
 import { DishService } from '../../../services/dish.service';
 
@@ -23,9 +21,7 @@ interface DishDetails {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-user-my-review',
-  imports: [CommonModule, UserNavComponent],
   templateUrl: './user-my-review.html',
   styleUrls: ['./user-my-review.css']
 })

@@ -4,11 +4,9 @@ import {
   FormGroup,
   Validators,
   AbstractControl,
-  ValidationErrors,
-  ReactiveFormsModule
+  ValidationErrors
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 // --- Custom Validator Function ---
 // This function checks if the 'password' and 'confirmPassword' fields match
@@ -38,9 +36,7 @@ export function passwordMatchValidator(
 
 // --- Component Definition ---
 @Component({
-  standalone: true,
   selector: 'app-signup',
-  imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })

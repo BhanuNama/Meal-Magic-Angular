@@ -1,15 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserNavComponent } from '../user-nav/user-nav';
 import { ReviewService } from '../../../services/review.service';
 import { Review } from '../../../models/review.model';
 
 @Component({
-  standalone: true,
   selector: 'app-user-review',
-  imports: [CommonModule, FormsModule, UserNavComponent],
   templateUrl: './user-review.html',
   styleUrls: ['./user-review.css']
 })

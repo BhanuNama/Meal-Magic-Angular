@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface CartItem {
   dishId: string;
@@ -9,9 +8,7 @@ interface CartItem {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-user-nav',
-  imports: [RouterModule, CommonModule],
   templateUrl: './user-nav.html',
   styleUrls: ['./user-nav.css']
 })

@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserNavComponent } from '../user-nav/user-nav';
 import { OrderService } from '../../../services/order.service';
 import { DishService } from '../../../services/dish.service';
 
@@ -14,9 +11,7 @@ interface CartItem {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-checkout',
-  imports: [CommonModule, FormsModule, UserNavComponent],
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css']
 })

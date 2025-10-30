@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { AdminNavComponent } from '../admin-nav/admin-nav';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  standalone: true,
   selector: 'app-dish-form',
-  imports: [ReactiveFormsModule, RouterModule, CommonModule, AdminNavComponent],
   templateUrl: './dish-form.html',
   styleUrls: ['./dish-form.css']
 })

@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AdminNavComponent } from '../admin-nav/admin-nav';
 import { OrderService } from '../../../services/order.service';
 
 interface OrderItem {
@@ -42,9 +39,7 @@ interface OrderDisplay {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-order-placed',
-  imports: [CommonModule, FormsModule, AdminNavComponent],
   templateUrl: './order-placed.html',
   styleUrls: ['./order-placed.css']
 })

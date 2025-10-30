@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
-  standalone: true,
   selector: 'app-admin-nav',
-  imports: [RouterModule, CommonModule],
   templateUrl: './admin-nav.html',
   styleUrls: ['./admin-nav.css']
 })

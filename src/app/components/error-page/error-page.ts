@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
-  standalone: true,
   selector: 'app-error-page',
-  imports: [CommonModule, RouterModule],
   templateUrl: './error-page.html',
   styleUrls: ['./error-page.css']
 })

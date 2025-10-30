@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AdminNavComponent } from '../admin-nav/admin-nav';
 import { ReviewService } from '../../../services/review.service';
 import { DishService } from '../../../services/dish.service';
 import { UserService } from '../../../services/user.service';
@@ -35,9 +32,7 @@ interface User {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-admin-view-reviews',
-  imports: [CommonModule, FormsModule, AdminNavComponent, DatePipe],
   templateUrl: './admin-view-reviews.html',
   styleUrls: ['./admin-view-reviews.css']
 })

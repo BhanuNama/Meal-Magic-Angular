@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AdminNavComponent } from '../admin-nav/admin-nav';
 
 @Component({
-  standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, AdminNavComponent],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })

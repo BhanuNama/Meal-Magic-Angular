@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserNavComponent } from '../user-nav/user-nav';
 
 interface Dish {
   id: number;
@@ -23,9 +20,7 @@ interface Review {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-user-view-dishes',
-  imports: [CommonModule, FormsModule, UserNavComponent],
   templateUrl: './user-view-dishes.html',
   styleUrls: ['./user-view-dishes.css']
 })

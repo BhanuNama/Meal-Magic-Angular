@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { AdminNavComponent } from '../admin-nav/admin-nav';
+import { Router } from '@angular/router';
 
 // Display interface for the component
 interface DishDisplay {
@@ -16,9 +13,7 @@ interface DishDisplay {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-admin-view-dishes',
-  imports: [CommonModule, FormsModule, RouterModule, AdminNavComponent],
   templateUrl: './admin-view-dishes.html',
   styleUrls: ['./admin-view-dishes.css']
 })

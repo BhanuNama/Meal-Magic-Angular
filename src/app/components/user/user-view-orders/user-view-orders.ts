@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UserNavComponent } from '../user-nav/user-nav';
 import { OrderService } from '../../../services/order.service';
 
 interface OrderItem {
@@ -38,9 +36,7 @@ interface OrderDisplay {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-user-view-orders',
-  imports: [CommonModule, UserNavComponent],
   templateUrl: './user-view-orders.html',
   styleUrls: ['./user-view-orders.css']
 })
