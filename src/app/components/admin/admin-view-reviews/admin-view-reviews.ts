@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../../../services/review.service';
 import { DishService } from '../../../services/dish.service';
 import { UserService } from '../../../services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Review {
   _id: string;
@@ -54,7 +55,8 @@ export class AdminViewReviewsComponent implements OnInit {
   constructor(
     private reviewService: ReviewService,
     private dishService: DishService,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -83,7 +85,7 @@ export class AdminViewReviewsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading reviews:', error);
-        alert('Failed to load reviews. Please try again.');
+        this.toastr.error('Failed to load reviews. Please try again.');
       }
     });
   }
@@ -129,7 +131,7 @@ export class AdminViewReviewsComponent implements OnInit {
 
   viewDish(dishId: string) {
     if (!dishId) {
-      alert('Dish information not available');
+      this.toastr.warning('Dish information not available');
       return;
     }
 
@@ -151,14 +153,14 @@ export class AdminViewReviewsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading dish:', error);
-        alert('Failed to load dish details.');
+        this.toastr.error('Failed to load dish details.');
       }
     });
   }
 
   viewUser(userId: string) {
     if (!userId) {
-      alert('User information not available');
+      this.toastr.warning('User information not available');
       return;
     }
 
@@ -179,7 +181,7 @@ export class AdminViewReviewsComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading user:', error);
-        alert('Failed to load user details.');
+        this.toastr.error('Failed to load user details.');
       }
     });
   }

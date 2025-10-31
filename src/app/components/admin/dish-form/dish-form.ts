@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dish-form',
@@ -29,7 +30,8 @@ export class DishFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {
     this.dishForm = this.fb.group({
       dishName: ['', Validators.required],
@@ -186,7 +188,7 @@ export class DishFormComponent implements OnInit {
 
       if (response.ok) {
         console.log('Dish added successfully:', data);
-        alert('Dish Added Successfully!');
+        this.toastr.success('Dish Added Successfully!');
         this.router.navigate(['/admin/dishes']);
       } else {
         this.errorMsg = data.message || 'Failed to add dish';
@@ -229,7 +231,7 @@ export class DishFormComponent implements OnInit {
 
       if (response.ok) {
         console.log('Dish updated successfully:', data);
-        alert('Dish Updated Successfully!');
+        this.toastr.success('Dish Updated Successfully!');
         this.router.navigate(['/admin/dishes']);
       } else{
         this.errorMsg = data.message || 'Failed to update dish';

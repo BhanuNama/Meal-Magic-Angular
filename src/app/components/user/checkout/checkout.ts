@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderService } from '../../../services/order.service';
 import { DishService } from '../../../services/dish.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface CartItem {
   dishId: string;
@@ -24,7 +25,8 @@ export class Checkout implements OnInit {
   constructor(
     private router: Router,
     private orderService: OrderService,
-    private dishService: DishService
+    private dishService: DishService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -77,24 +79,24 @@ export class Checkout implements OnInit {
   onPlaceOrder(): void {
     // Validate inputs
     if (!this.shippingAddress.trim()) {
-      alert('Please enter shipping address');
+      this.toastr.error('Please enter shipping address');
       return;
     }
 
     if (!this.billingAddress.trim()) {
-      alert('Please enter billing address');
+      this.toastr.error('Please enter billing address');
       return;
     }
 
     if (this.cartItems.length === 0) {
-      alert('Your cart is empty');
+      this.toastr.warning('Your cart is empty');
       return;
     }
 
     // Get user from localStorage
     const userString = localStorage.getItem('user');
     if (!userString) {
-      alert('Please login to place order');
+      this.toastr.warning('Please login to place order');
       this.router.navigate(['/login']);
       return;
     }
@@ -104,7 +106,7 @@ export class Checkout implements OnInit {
       const userId = user.userId || user.id || user._id;
 
       if (!userId) {
-        alert('User ID not found. Please login again.');
+        this.toastr.error('User ID not found. Please login again.');
         this.router.navigate(['/login']);
         return;
       }
@@ -126,7 +128,7 @@ export class Checkout implements OnInit {
       this.orderService.addOrder(orderData as any).subscribe({
         next: (response) => {
           console.log('Order placed successfully:', response);
-          alert('Order placed successfully!');
+          this.toastr.success('Order placed successfully!');
           
           // Clear cart
           localStorage.removeItem('cart');
@@ -137,13 +139,13 @@ export class Checkout implements OnInit {
         },
         error: (error) => {
           console.error('Error placing order:', error);
-          alert('Failed to place order. Please try again.');
+          this.toastr.error('Failed to place order. Please try again.');
         }
       });
 
     } catch (error) {
       console.error('Error processing order:', error);
-      alert('Failed to place order. Please try again.');
+      this.toastr.error('Failed to place order. Please try again.');
     }
   }
 }

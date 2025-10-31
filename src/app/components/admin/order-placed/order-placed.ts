@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../services/order.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface OrderItem {
   dish: any;
@@ -58,7 +59,7 @@ export class OrderPlacedComponent implements OnInit {
   showProfileModal: boolean = false;
   selectedOrder: OrderDisplay | null = null;
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -95,7 +96,7 @@ export class OrderPlacedComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading orders:', error);
-        alert('Failed to load orders. Please try again.');
+        this.toastr.error('Failed to load orders. Please try again.');
       }
     });
   }
@@ -177,11 +178,11 @@ export class OrderPlacedComponent implements OnInit {
     this.orderService.updateOrder(order._id, { orderStatus: order.status } as any).subscribe({
       next: (response) => {
         console.log('Order status updated:', response);
-        alert('Order status updated successfully!');
+        this.toastr.success('Order status updated successfully!');
       },
       error: (error) => {
         console.error('Error updating order status:', error);
-        alert('Failed to update order status');
+        this.toastr.error('Failed to update order status');
         // Reload orders to reset the status
         this.loadOrders();
       }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 interface Dish {
   id: number;
@@ -38,7 +39,7 @@ export class UserViewDishesComponent implements OnInit {
   selectedDish: Dish | null = null;
   dishReviews: Review[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loadDishes();
@@ -91,7 +92,7 @@ export class UserViewDishesComponent implements OnInit {
 
   onAddToCart(dish: Dish, quantity: number) {
     if (quantity <= 0) {
-      alert('Please select a quantity');
+      this.toastr.warning('Please select a quantity');
       return;
     }
 
@@ -129,7 +130,7 @@ export class UserViewDishesComponent implements OnInit {
     // Dispatch custom event for cart update
     window.dispatchEvent(new CustomEvent('cartUpdated'));
     
-    alert(`Added ${quantity} ${dish.name} to cart!`);
+    this.toastr.success(`Added ${quantity} ${dish.name} to cart!`);
   }
 
   onViewReviews(dish: Dish) {

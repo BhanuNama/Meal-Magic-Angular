@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../services/order.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface OrderItem {
   dish: any;
@@ -55,7 +56,7 @@ export class UserViewOrders implements OnInit {
   
   userId: string = '';
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.getUserId();
@@ -119,7 +120,7 @@ export class UserViewOrders implements OnInit {
 
   openCancelModal(order: OrderDisplay): void {
     if (order.status !== 'Pending') {
-      alert('Only pending orders can be cancelled');
+      this.toastr.warning('Only pending orders can be cancelled');
       return;
     }
     this.selectedOrder = order;
@@ -147,7 +148,7 @@ export class UserViewOrders implements OnInit {
       },
       error: (error) => {
         console.error('Error cancelling order:', error);
-        alert('Failed to cancel order. Please try again.');
+        this.toastr.error('Failed to cancel order. Please try again.');
         this.closeCancelModal();
       }
     });

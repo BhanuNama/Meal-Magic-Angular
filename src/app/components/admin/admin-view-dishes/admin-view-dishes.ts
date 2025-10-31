@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 // Display interface for the component
 interface DishDisplay {
@@ -33,7 +34,7 @@ export class AdminViewDishesComponent implements OnInit {
   cuisines: string[] = ['All Cuisine', 'Indian', 'American', 'Mediterranean', 'Japanese', 'Italian', 'Chinese'];
   apiUrl = 'http://localhost:3001/dish';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loadDishes();
@@ -57,7 +58,7 @@ export class AdminViewDishesComponent implements OnInit {
       this.filteredDishes = [...this.dishes];
     } catch (error) {
       console.error('Error loading dishes:', error);
-      alert('Failed to load dishes. Please try again.');
+      this.toastr.error('Failed to load dishes. Please try again.');
     }
   }
 
@@ -118,11 +119,11 @@ export class AdminViewDishesComponent implements OnInit {
         // Remove from local array
         this.dishes = this.dishes.filter(d => d.id !== this.dishToDelete!.id);
         this.applyFilters();
-        alert(`${dishName} has been deleted successfully`);
+        this.toastr.success(`${dishName} has been deleted successfully`);
         this.closeDeleteDialog();
       } catch (error) {
         console.error('Error deleting dish:', error);
-        alert('Failed to delete dish. Please try again.');
+        this.toastr.error('Failed to delete dish. Please try again.');
         this.closeDeleteDialog();
       }
     } else {

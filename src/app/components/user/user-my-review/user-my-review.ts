@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../../../services/review.service';
 import { DishService } from '../../../services/dish.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface ReviewDisplay {
   _id: string;
@@ -37,7 +38,8 @@ export class UserMyReview implements OnInit {
 
   constructor(
     private reviewService: ReviewService,
-    private dishService: DishService
+    private dishService: DishService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +109,7 @@ export class UserMyReview implements OnInit {
       },
       error: (error) => {
         console.error('Error loading dish:', error);
-        alert('Failed to load dish details');
+        this.toastr.error('Failed to load dish details');
       }
     });
   }
@@ -142,12 +144,12 @@ export class UserMyReview implements OnInit {
         // Remove from local array
         this.reviews = this.reviews.filter(r => r._id !== reviewId);
         
-        alert(`Review for "${dishName}" has been deleted successfully`);
+        this.toastr.success(`Review for "${dishName}" has been deleted successfully`);
         this.closeDeleteModal();
       },
       error: (error) => {
         console.error('Error deleting review:', error);
-        alert('Failed to delete review. Please try again.');
+        this.toastr.error('Failed to delete review. Please try again.');
         this.closeDeleteModal();
       }
     });

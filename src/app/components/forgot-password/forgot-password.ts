@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,32 +14,32 @@ export class ForgotPassword {
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toastr: ToastrService) {}
 
   async onSubmit(): Promise<void> {
     // Validation
     if (!this.email.trim()) {
-      alert('Please enter your email address');
+      this.toastr.error('Please enter your email address');
       return;
     }
 
     if (!this.newPassword.trim()) {
-      alert('Please enter a new password');
+      this.toastr.error('Please enter a new password');
       return;
     }
 
     if (!this.confirmPassword.trim()) {
-      alert('Please confirm your new password');
+      this.toastr.error('Please confirm your new password');
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      alert('Passwords do not match');
+      this.toastr.error('Passwords do not match');
       return;
     }
 
     if (this.newPassword.length < 6) {
-      alert('Password must be at least 6 characters long');
+      this.toastr.error('Password must be at least 6 characters long');
       return;
     }
 
@@ -57,14 +58,14 @@ export class ForgotPassword {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Password reset successful! Please login with your new password.');
+        this.toastr.success('Password reset successful! Please login with your new password.');
         this.router.navigate(['/login']);
       } else {
-        alert(data.message || 'Failed to reset password. Please try again.');
+        this.toastr.error(data.message || 'Failed to reset password. Please try again.');
       }
     } catch (error) {
       console.error('Password reset error:', error);
-      alert('Failed to reset password. Please try again.');
+      this.toastr.error('Failed to reset password. Please try again.');
     }
   }
 
