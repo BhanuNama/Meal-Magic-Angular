@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login';
 import { SignupComponent } from './components/signup/signup';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { ErrorPage } from './components/error-page/error-page';
+import { HomePage } from './components/home-page/home-page';
 import { DashboardComponent } from './components/admin/dashboard/dashboard';
 import { AdminViewDishesComponent } from './components/admin/admin-view-dishes/admin-view-dishes';
 import { DishFormComponent } from './components/admin/dish-form/dish-form';
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'error', component: ErrorPage },
-  { path: 'admin', redirectTo: 'admin/dashboard', pathMatch: 'full' },
+  { path: 'admin', redirectTo: 'admin/home', pathMatch: 'full' },
+  { path: 'admin/home', component: HomePage },
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/dishes', component: AdminViewDishesComponent },
   { path: 'admin/dishes/add', component: DishFormComponent },
