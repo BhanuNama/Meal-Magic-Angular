@@ -38,6 +38,9 @@ export class UserViewDishesComponent implements OnInit {
   showReviewsModal: boolean = false;
   selectedDish: Dish | null = null;
   dishReviews: Review[] = [];
+  
+  // Quantity tracking for each dish
+  quantities: Map<number, number> = new Map();
 
   constructor(private router: Router, private toastr: ToastrService) {}
 
@@ -51,16 +54,18 @@ export class UserViewDishesComponent implements OnInit {
       const data = await response.json();
       
       if (response.ok) {
-        // Map backend data to component format
-        this.dishes = data.map((dish: any) => ({
-          id: dish._id,
-          name: dish.dishName,
-          cuisine: dish.cuisine,
-          description: dish.description,
-          price: dish.price,
-          availability: dish.isAvailable ? 'Available' : 'Not Available',
-          image: dish.coverImage
-        }));
+        // Map backend data to component format and filter only available dishes
+        this.dishes = data
+          .filter((dish: any) => dish.isAvailable)
+          .map((dish: any) => ({
+            id: dish._id,
+            name: dish.dishName,
+            cuisine: dish.cuisine,
+            description: dish.description,
+            price: dish.price,
+            availability: dish.isAvailable ? 'Available' : 'Not Available',
+            image: dish.coverImage
+          }));
         this.filteredDishes = [...this.dishes];
       }
     } catch (error) {
@@ -92,7 +97,7 @@ export class UserViewDishesComponent implements OnInit {
 
   onAddToCart(dish: Dish, quantity: number) {
     if (quantity <= 0) {
-      this.toastr.warning('Please select a quantity');
+      this.toastr.warning('Please select the quantity more than 0');
       return;
     }
 
@@ -129,6 +134,9 @@ export class UserViewDishesComponent implements OnInit {
     
     // Dispatch custom event for cart update
     window.dispatchEvent(new CustomEvent('cartUpdated'));
+    
+    // Reset quantity back to 0 after adding to cart
+    this.quantities.set(dish.id, 0);
     
     this.toastr.success(`Added ${quantity} ${dish.name} to cart!`);
   }
@@ -177,5 +185,24 @@ export class UserViewDishesComponent implements OnInit {
 
   getStarArray(rating: number): number[] {
     return Array(rating).fill(0);
+  }
+
+  // Quantity management methods
+  getQuantity(dishId: number): number {
+    return this.quantities.get(dishId) || 0;
+  }
+
+  incrementQuantity(dishId: number): void {
+    const currentQty = this.getQuantity(dishId);
+    if (currentQty < 10) {
+      this.quantities.set(dishId, currentQty + 1);
+    }
+  }
+
+  decrementQuantity(dishId: number): void {
+    const currentQty = this.getQuantity(dishId);
+    if (currentQty > 0) {
+      this.quantities.set(dishId, currentQty - 1);
+    }
   }
 }
