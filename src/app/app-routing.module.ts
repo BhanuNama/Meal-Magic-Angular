@@ -17,13 +17,14 @@ import { UserReview } from './components/user/user-review/user-review';
 import { UserMyReview } from './components/user/user-my-review/user-my-review';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomePage },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'error', component: ErrorPage },
-  { path: 'admin', redirectTo: 'admin/home', pathMatch: 'full' },
-  { path: 'admin/home', component: HomePage },
+  { path: 'admin', redirectTo: 'admin/dashboard', pathMatch: 'full' },
+  { path: 'admin/home', redirectTo: '/home', pathMatch: 'full' },
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/dishes', component: AdminViewDishesComponent },
   { path: 'admin/dishes/add', component: DishFormComponent },
@@ -31,7 +32,7 @@ const routes: Routes = [
   { path: 'admin/orders', component: OrderPlacedComponent },
   { path: 'admin/reviews', component: AdminViewReviewsComponent },
   { path: 'user', component: UserViewDishesComponent },
-  { path: 'user/home', redirectTo: 'user', pathMatch: 'full' },
+  { path: 'user/home', redirectTo: '/home', pathMatch: 'full' },
   { path: 'user/orders', component: UserViewOrders },
   { path: 'user/checkout', component: Checkout },
   { path: 'user/review/:dishId', component: UserReview },
