@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin-nav.css']
 })
 export class AdminNavComponent implements OnInit {
+  isDropDownOpen = false;
   currentUser: any = null;
   showLogoutPopup: boolean = false;
 
@@ -47,5 +48,9 @@ export class AdminNavComponent implements OnInit {
     localStorage.removeItem('cart');
     this.closeLogoutPopup();
     this.router.navigate(['/login']);
+  }
+
+  toggleDropdown(): void {
+    this.isDropDownOpen = !this.isDropDownOpen;
   }
 }

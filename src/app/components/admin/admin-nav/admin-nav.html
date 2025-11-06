@@ -8,18 +8,13 @@
     
     <div class="collapse navbar-collapse" id="adminNav">
       <div class="ms-auto d-flex align-items-center gap-2">
-        <span class="text-white px-3 py-2 rounded fw-bold" style="background-color: rgba(0,0,0,0.2);">
-          {{ currentUser.username }} / {{ currentUser.role }}
-        </span>
+        <span class="text-white px-3 py-2 rounded fw-bold" style="background-color: rgba(0,0,0,0.2);">{{ currentUser.username }} / {{ currentUser.role }}</span>
         <a class="nav-link text-white px-2" routerLink="/home" routerLinkActive="active">Home</a>
         <a class="nav-link text-white px-2" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
         
-        <!-- Dishes Dropdown -->
         <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white px-2" href="javascript:void(0)" role="button" data-bs-toggle="dropdown">
-            Dishes
-          </a>
-          <ul class="dropdown-menu">
+          <a class="nav-link dropdown-toggle text-white px-2" href="javascript:void(0)" role="button" (click)="toggleDropdown()">Dishes</a>
+          <ul class="dropdown-menu" [class.show]="isDropDownOpen">
             <li><a class="dropdown-item" routerLink="/admin/dishes/add">Add Dish</a></li>
             <li><a class="dropdown-item" routerLink="/admin/dishes">View All Dishes</a></li>
           </ul>

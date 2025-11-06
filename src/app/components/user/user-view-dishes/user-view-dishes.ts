@@ -152,17 +152,17 @@ export class UserViewDishesComponent implements OnInit {
       const response = await fetch(`${this.apiUrl}/review/getReviewsByDishId/${dishId}`);
       const data = await response.json();
       
-      if (response.ok && data.data) {
+      if (response.ok && Array.isArray(data)) {
         // Map backend reviews to component format
-        this.dishReviews = data.data.map((review: any) => ({
+        this.dishReviews = data.map((review: any) => ({
           id: review._id,
-          username: review.userId?.username || 'Anonymous',
+          username: review.user?.username || 'Anonymous',
           rating: review.rating,
           comment: review.reviewText,
           date: new Date(review.createdAt || review.date)
         }));
       } else {
-        // No reviews found
+        // No reviews found or error response
         this.dishReviews = [];
       }
     } catch (error) {
