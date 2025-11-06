@@ -1,3 +1,26 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg" style="background-color: #f05623;">
+  <div class="container-fluid">
+    <span class="navbar-brand text-dark fw-bold mb-0">Meal Magic</span>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#homeNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="homeNav">
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <a class="nav-link text-white px-2" routerLink="/home" routerLinkActive="active">Home</a>
+        <a class="nav-link text-white px-2" (click)="viewDishes()" style="cursor: pointer;">Dishes</a>
+        <a class="nav-link text-white px-2" (click)="viewOrders()" style="cursor: pointer;">Orders</a>
+        <a class="nav-link text-white px-2" (click)="viewReviews()" style="cursor: pointer;">Reviews</a>
+        <button class="btn btn-light btn-sm fw-bold" (click)="goToLogin()" style="color: #f05623;">
+          Login
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <!-- Hero Section -->
 <div class="hero-section d-flex flex-column justify-content-center align-items-center text-white text-center">
   <h1 class="display-2 fw-bold mb-3">Meal Magic</h1>
@@ -22,8 +45,32 @@
   </div>
 </div>
 
-<!-- Contact Us Section -->
+<!-- Dishes Section -->
 <div class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold mb-3">Our Dishes</h2>
+      <hr class="border border-danger border-2 opacity-75 mx-auto" style="width: 100px;">
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-4" *ngFor="let dish of dishes">
+        <div class="card h-100 shadow-sm">
+          <img [src]="dish.coverImage" class="card-img-top" [alt]="dish.dishName" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ dish.dishName }}</h5>
+            <p class="text-danger fw-bold">₹{{ dish.price }}</p>
+            <p class="small"><strong>Cuisine:</strong> {{ dish.cuisine }}</p>
+            <p class="small text-muted">{{ dish.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Us Section -->
+<div class="py-5 bg-light">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold mb-3">Contact Us</h2>
@@ -32,21 +79,21 @@
     
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <div class="p-4 mb-3 shadow-sm rounded bg-light">
+        <div class="p-4 mb-3 shadow-sm rounded bg-white">
           <div class="row align-items-center">
             <div class="col-4 fw-bold">Phone:</div>
             <div class="col-8 text-muted">+91 98765 43210</div>
           </div>
         </div>
         
-        <div class="p-4 mb-3 shadow-sm rounded bg-light">
+        <div class="p-4 mb-3 shadow-sm rounded bg-white">
           <div class="row align-items-center">
             <div class="col-4 fw-bold">Email:</div>
             <div class="col-8 text-muted">support@mealmagic.com</div>
           </div>
         </div>
         
-        <div class="p-4 mb-3 shadow-sm rounded bg-light">
+        <div class="p-4 mb-3 shadow-sm rounded bg-white">
           <div class="row align-items-center">
             <div class="col-4 fw-bold">Address:</div>
             <div class="col-8 text-muted">456 Gourmet Avenue, Flavor Town, IN</div>
